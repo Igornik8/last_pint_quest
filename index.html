@@ -1,158 +1,71 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>В поисках последней пинты</title>
 <style>
-  :root{
-    --bg:#0f1115;--card:#171a21;--text:#e7e7ea;--muted:#a7a7b3;--border:#262a33;--accent:#ffd54a;--ok:#56d364;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;line-height:1.5}
-  .wrap{max-width:860px;margin:0 auto;padding:16px}
-  h1{margin:0 0 8px;font-size:24px}
-  .meta{color:var(--muted);margin-bottom:14px}
-  .screen{display:none}
-  .screen.active{display:block}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin:12px 0}
-  .head{display:flex;gap:10px;align-items:center}
-  .num{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:#232736;border:1px solid var(--border);color:var(--accent);font-weight:700}
-  .ttl{font-weight:700}
-  .time{color:var(--muted);font-size:13px}
-  img{width:100%;height:auto;border-radius:12px;border:1px solid #2a2f3c;margin-top:10px}
-  .inp{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-  input{flex:1;min-width:180px;background:#232736;border:1px solid #2a2f3c;color:var(--text);padding:10px 12px;border-radius:12px}
-  button{appearance:none;background:#232736;border:1px solid #2a2f3c;color:var(--text);padding:10px 12px;border-radius:12px;font-weight:600;cursor:pointer}
-  .ok{background:#193a24;border-color:#1f6f3f;color:#9be89c}
-  .riddle{margin-top:8px}
-  .done{color:#9be89c;font-size:12px;margin-left:auto}
-  .hidden{display:none}
-  .center{display:grid;place-items:center;min-height:50vh;text-align:center}
-  .bigbtn{font-size:18px;padding:14px 18px;border-radius:14px}
+    body {
+        font-family: 'Trebuchet MS', sans-serif;
+        background-color: #f9f4e7;
+        background-image: url('img/parchment.jpg'); /* фон под старую карту */
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        color: #3e2f1c;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: rgba(255,255,255,0.85);
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+    h1, h2 {
+        text-align: center;
+        font-family: 'Georgia', serif;
+        color: #2c1d0f;
+    }
+    p {
+        font-size: 18px;
+        line-height: 1.5em;
+    }
+    .step {
+        margin: 20px 0;
+        padding: 15px;
+        background: rgba(255,255,255,0.7);
+        border-left: 5px solid #a67c52;
+        border-radius: 8px;
+    }
+    .step img {
+        max-width: 100%;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+    .btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: #a67c52;
+        color: white;
+        font-size: 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .btn:hover {
+        background: #8c6239;
+    }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- Стартовый экран -->
-  <div id="start" class="screen active center">
-    <div>
-      <h1>В поисках последней пинты — Прага</h1>
-      <div class="meta">
-        Старт: <b>U Kunštátů</b> (Maiselova 12, Prague 1)<br>
-        Длина без баров: <b>~6,0–6,5 км</b> (~<b>1 ч 20 мин</b> хода)
-      </div>
-      <button class="bigbtn ok" onclick="begin()">Начать</button>
-    </div>
-  </div>
 
-  <!-- Маршрут -->
-  <div id="route" class="screen">
-    <div id="steps"></div>
-    <div class="meta" style="margin-top:10px">Прогресс сохраняется на устройстве. Названий мест нет — только шаги.</div>
-  </div>
-</div>
+<div class="container">
+    <h1>В поисках последней пинты</h1>
+    <p>Готовься к веселью! Сегодня мы отправляемся в приключение по Праге, полное тайн, загадок и пива 🍺.
+       В конце тебя ждёт особая награда — <b>обратный билет в Париж к невесте</b>. Но сперва — испытания!</p>
+    <p>Первое задание: пройти дегустацию вслепую и угадать сорта. Когда будешь готов — начнём путь.</p>
+    <a class="btn" href="#step1">Начать маршрут</a>
 
-<script>
-/* ====== ДАННЫЕ (8 фото + финал без фото) ======
-   Положи в репозиторий папку img/ с файлами 1.jpg … 8.jpg:
-   1.jpg — Пороховая башня
-   2.jpg — Пражские куранты
-   3.jpg — Карлов мост
-   4.jpg — Стена Джона Леннона
-   5.jpg — U svatého Filipa a Jakuba (Gambrinus)
-   6.jpg — Most Legií (или твой кадр по маршруту)
-   7.jpg — Národní divadlo (Нац. театр)
-   8.jpg — U Fleků
-*/
-const DATA = [
-  // n, img, riddle, answerVariants[], note
-  [1, "img/1.jpg", "Через меня входили в город воины и короли. Кто я?",
-    ["пороховая", "пороховая башня", "powder tower", "prachova brana", "prachová brána"], ""],
-  [2, "img/2.jpg", "Я считаю время, но делаю это красиво. Где я?",
-    ["куранты","пражские куранты","орлой","часы","astronomical clock","orloj","pražský orloj","prazsky orloj"], ""],
-  [3, "img/3.jpg", "Я соединяю берега и храню истории. Что это?",
-    ["карлов мост","мост карла","charles bridge","karluv most","karlův most","karlov most"], ""],
-  [4, "img/4.jpg", "Здесь пишут мечты, рисуют мир и поют про любовь. Назови место.",
-    ["стена леннона","lennon wall","john lennon wall","lennon"], "(можно догнаться)"],
-  [5, "img/5.jpg", "Здесь льётся золотой Gambrinus, а стены помнят старые шутки. Куда пришёл?",
-    ["gambrinus","u svateho filipa a jakuba","u svatého filipa a jakuba","filipa a jakuba","svateho filipa","svatého filipa"], "Подвал с пивом на разлив."],
-  [6, "img/6.jpg", "Сделай фото с видом на реку и старый мост. Готов — введи «готово».",
-    ["готово","done","ok"], ""],
-  [7, "img/7.jpg", "Здание у воды с золотой короной крыши. Что это за место?",
-    ["национальный театр","narodni divadlo","national theatre","театр"], ""],
-  [8, "img/8.jpg", "Место, где чёрное пиво стало легендой. Назови его.",
-    ["u fleku","u fleků","fleku","fleku beer hall","u  fleku"], "Легендарное чёрное пиво."],
-  [9, "", "Где рулька и пиво встречаются в идеальном союзе. Финальная точка?",
-    ["козловна","kozlovna","kozlovna restaurant","kozlovna praha"], "Финал: ужин (Kozlovna)."]
-];
-
-// ===== нормализация для НЕстрогих ответов (регистр/пробелы/диакритика)
-function norm(s){
-  return (s||"")
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // убрать диакритику: karlův -> karluv
-    .replace(/[ё]/g,'е').replace(/[й]/g,'и')
-    .replace(/[^a-zа-я0-9]+/g,'') // убрать пробелы/знаки
-    .trim();
-}
-
-// ===== локальное сохранение
-const KEY="pint_pages_progress_v3";
-const state = JSON.parse(localStorage.getItem(KEY)||"{}");
-function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-
-// ===== UI
-function begin(){
-  document.getElementById('start').classList.remove('active');
-  document.getElementById('route').classList.add('active');
-  render();
-}
-
-function checkAnswer(n){
-  const inp = document.getElementById('inp_'+n);
-  const v = norm(inp.value);
-  const variants = (DATA[n-1][3]||[]).map(norm);
-  const ok = variants.length ? variants.some(x=>x===v) : true;
-  if(ok){
-    state[n]=true; save(); render();
-    setTimeout(()=>{ const nx=document.getElementById('card_'+(n+1)); if(nx) nx.scrollIntoView({behavior:'smooth'}); },120);
-  }else{
-    inp.style.borderColor='#ff6b6b';
-    setTimeout(()=>inp.style.borderColor='#2a2f3c',800);
-  }
-}
-
-function toggle(n){ state[n]=!state[n]; save(); render(); }
-
-function card(step){
-  const [n,img,riddle,answers,note] = step;
-  const done = !!state[n];
-  return `
-  <div class="card" id="card_${n}">
-    <div class="head">
-      <div class="num">${String(n).padStart(2,'0')}</div>
-      <div><div class="ttl">Шаг ${n}</div><div class="time">${note||''}</div></div>
-      ${done?'<div class="done">✓ Готово</div>':''}
-    </div>
-    ${img?`<img src="${img}" alt="step ${n}">`:''}
-    ${riddle?`<div class="riddle"><b>Загадка:</b> ${riddle}</div>`:''}
-    <div class="inp">
-      <input id="inp_${n}" placeholder="Ответ" autocomplete="off" inputmode="text">
-      <button onclick="checkAnswer(${n})">Проверить</button>
-      <button class="ok" onclick="toggle(${n})">${done?'Сбросить шаг':'Отметить «Готово»'}</button>
-    </div>
-  </div>`;
-}
-
-function render(){
-  const box = document.getElementById('steps');
-  box.innerHTML = DATA.map(card).join('');
-  for(let i=2;i<=DATA.length;i++){
-    if(!state[i-1]) document.getElementById('card_'+i).classList.add('hidden');
-  }
-  if(state[1]===undefined){ state[1]=false; save(); }
-}
-</script>
-</body>
-</html>
+    <div id="step1" clas
