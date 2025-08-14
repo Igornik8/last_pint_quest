@@ -6,53 +6,62 @@
 <title>В поисках последней пинты</title>
 <style>
   :root{
-    --ink:#2e2416;--gold:#a67c52;--bg:#f7f1e3;
+    --ink:#2e2416;--gold:#a67c52;--bg:#efe5cf;--edge:#d9c8a5;--shadow:rgba(0,0,0,.14);
+    --ok:#1b8b51;--bad:#9a1f1f;
   }
-  html,body{margin:0;height:100%;}
+  html,body{margin:0;height:100%}
   body{
     font-family: "Trebuchet MS", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     color:var(--ink);
-    background:#efe5cf url('img/parchment.jpg') center/cover fixed no-repeat;
+    background:var(--bg);
+    background-image: radial-gradient(40% 40% at 50% 10%, rgba(255,255,255,.6), rgba(0,0,0,0) 70%), 
+                      radial-gradient(80% 80% at 50% 100%, rgba(0,0,0,.06), rgba(0,0,0,0) 70%);
   }
-  .wrap{max-width:900px;margin:0 auto;padding:24px;}
+  .wrap{max-width:900px;margin:0 auto;padding:24px}
   .card{
-    background:rgba(255,255,255,.86);
-    border:2px solid #d9c8a5;
+    background:rgba(255,255,255,.88);
+    border:2px solid var(--edge);
     border-radius:14px;
-    padding:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    padding:22px;
+    box-shadow:0 14px 36px var(--shadow);
+    position:relative; overflow:hidden;
+  }
+  .card:before,.card:after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(250px 120px at -80px -60px, rgba(255,255,255,.25), transparent 70%),
+      radial-gradient(250px 120px at 110% 110%, rgba(0,0,0,.05), transparent 70%);
+    mix-blend-mode:multiply;
   }
   h1,h2{font-family: Georgia, "Times New Roman", serif;margin:0 0 14px}
   h1{font-size:34px;text-align:center;color:#2c1d0f}
   h2{font-size:24px;color:#3b2916}
   p{font-size:18px;line-height:1.6;margin:10px 0}
-  .step{display:none;animation:.35s ease fade}
+  .step{display:none; animation:.35s ease fade}
   .step.active{display:block}
-  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-  .hero{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
-  .hero img,.map{width:100%;max-height:360px;object-fit:cover;border-radius:12px;border:1px solid #d7c6a3}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+  .grid2{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+  .map{width:100%;max-height:420px;object-fit:cover;border-radius:12px;border:1px solid #d7c6a3}
+  .riddle{margin-top:6px;padding:12px;border:1px dashed #bfa77f;border-radius:10px;background:#fff9ef}
+  label{display:block;font-size:14px;margin-top:8px;color:#5a4631}
+  input[type=text]{width:100%;padding:12px 14px;border:1px solid #ceb88f;border-radius:8px;font-size:16px}
+  .hint{font-size:14px;margin-top:6px}
+  .ok{color:var(--ok);font-weight:700}
+  .bad{color:var(--bad);font-weight:700}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
   .btn{
-    appearance:none;border:0;border-radius:10px;
-    padding:12px 18px;font-size:17px;
+    appearance:none;border:0;border-radius:12px;padding:12px 18px;font-size:17px;
     background:var(--gold);color:#fff;text-decoration:none;cursor:pointer;
     box-shadow:0 4px 0 #8b633b;transition:transform .06s ease, filter .15s ease;
   }
   .btn:active{transform:translateY(2px);box-shadow:0 2px 0 #8b633b}
   .btn.ghost{background:#fff;color:var(--ink);border:1px dashed #bfa77f;box-shadow:none}
-  .grid2{display:grid;grid-template-columns:1fr;gap:14px}
-  @media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
-  .riddle{margin-top:6px;padding:12px;border:1px dashed #bfa77f;border-radius:10px;background:#fff9ef}
-  label{display:block;font-size:14px;margin-top:8px;color:#5a4631}
-  input[type=text]{width:100%;padding:12px 14px;border:1px solid #ceb88f;border-radius:8px;font-size:16px}
-  .hint{font-size:14px;color:#756246}
-  .ok{color:#1a7f45;font-weight:600}
-  .bad{color:#9a1f1f;font-weight:600}
-  .topbar{position:sticky;top:0;z-index:10;background:linear-gradient(#f3ead6, #efe3c9);padding:10px 0;border-bottom:1px solid #e3d2ab;margin-bottom:16px}
+  .topbar{position:sticky;top:0;z-index:10;background:linear-gradient(#f3ead6,#efe3c9);padding:10px 0;border-bottom:1px solid #e3d2ab;margin-bottom:16px}
   .prog{height:8px;background:#e8d9b7;border-radius:999px;overflow:hidden}
   .prog>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#a67c52,#c39a6b)}
-  details summary{cursor:pointer;user-select:none}
-  .footnote{font-size:13px;color:#6b5a3c}
+  .foot{font-size:13px;color:#6b5a3c}
+  .tag{display:inline-block;padding:4px 8px;border:1px solid #d2c19b;border-radius:999px;background:#fff7e4;color:#6e542f;font-size:13px;margin-right:8px}
 </style>
 </head>
 <body>
@@ -60,7 +69,7 @@
   <div class="wrap">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
       <strong>Маршрут квеста</strong>
-      <span id="stepLabel" class="footnote">Старт</span>
+      <span id="stepLabel" class="foot">Старт</span>
     </div>
     <div class="prog"><span id="bar"></span></div>
   </div>
@@ -69,195 +78,191 @@
 <div class="wrap">
   <div class="card">
 
-    <!-- Стартовый экран -->
+    <!-- ВСТУПЛЕНИЕ / СТАРТ (U Kunštátů, без ввода) -->
     <section class="step active" data-step="0">
       <h1>В поисках последней пинты</h1>
-      <div class="hero">
-        <p>
-          Готовимся к веселью! Сегодня ты проходишь путь по Праге: загадки, дегустации и секретные остановки 🍺.
-          Финальный приз — <b>обратный билет в Париж к невесте</b>. Но сначала докажи, что достоин — пройди слепую дегустацию в старте.
-        </p>
-        <div class="grid2">
-          <div>
-            <h2>Старт — U Kunštátů (Maiselova 12)</h2>
-            <p>Попроси <i>blind tasting</i>. Отметь 3–5 вкусов/нот — это пригодится по пути.</p>
-          </div>
-          <img src="img/step1.jpg" alt="U Kunštátů">
+      <p><b>Готовься к веселью.</b> Говорят, где-то в Праге спрятан приз — <b>обратный билет в Париж к невесте</b>. 
+         Дорога к нему проходит через пену, легенды и пару сомнительных решений. Карта уже у тебя — осталось
+         доказать, что ты достоин финального тоста. 🍺</p>
+      <div class="grid2">
+        <div>
+          <h2>Старт — U Kunštátů (Maiselova 12)</h2>
+          <p><span class="tag">Разминка</span> Культовая крафтовая дегустация: нюхаем, гадаем, не выплёвываем.
+             Это твой нулевой чекпоинт — дальше сложнее (и веселее).</p>
         </div>
       </div>
       <div class="btnrow">
-        <button class="btn" data-next>Начать маршрут</button>
+        <button class="btn" data-next>Мы на месте — вперёд!</button>
       </div>
     </section>
 
-    <!-- 1. Пороховая башня -->
+    <!-- 1) Пороховая башня — img/1.jpg -->
     <section class="step" data-step="1">
       <h2>1) Пороховая башня</h2>
       <div class="grid2">
         <div class="riddle">
           <p><b>Загадка:</b> «Через меня входили в город воины и короли. Кто я?»</p>
           <label for="a1">Ответ:</label>
-          <input id="a1" placeholder="введи ответ…" />
+          <input id="a1" placeholder="введи ответ…">
           <div class="hint" id="m1"></div>
         </div>
-        <img class="map" src="img/powder.jpg" alt="Пороховая башня">
+        <img class="map" src="img/1.jpg" alt="Пороховая башня">
       </div>
       <div class="btnrow">
         <button class="btn" data-check="1">Проверить</button>
-        <button class="btn ghost" data-next>Дальше</button>
       </div>
     </section>
 
-    <!-- 2. Куранты -->
+    <!-- 2) Куранты — img/2.jpg -->
     <section class="step" data-step="2">
       <h2>2) Староместская площадь → Пражские куранты</h2>
       <div class="grid2">
         <div class="riddle">
           <p><b>Загадка:</b> «Я считаю время, но делаю это красиво. Где я?»</p>
           <label for="a2">Ответ:</label>
-          <input id="a2" placeholder="введи ответ…" />
+          <input id="a2" placeholder="введи ответ…">
           <div class="hint" id="m2"></div>
         </div>
-        <img class="map" src="img/orloj.jpg" alt="Куранты">
+        <img class="map" src="img/2.jpg" alt="Куранты">
       </div>
       <div class="btnrow">
         <button class="btn" data-check="2">Проверить</button>
-        <button class="btn ghost" data-next>Дальше</button>
       </div>
     </section>
 
-    <!-- 3. Карлов мост -->
+    <!-- 3) Карлов мост — img/3.jpg -->
     <section class="step" data-step="3">
       <h2>3) Карлов мост</h2>
       <div class="grid2">
         <div class="riddle">
           <p><b>Загадка:</b> «Я соединяю берега и храню истории.»</p>
           <label for="a3">Ответ:</label>
-          <input id="a3" placeholder="введи ответ…" />
+          <input id="a3" placeholder="введи ответ…">
           <div class="hint" id="m3"></div>
         </div>
-        <img class="map" src="img/charles.jpg" alt="Карлов мост">
+        <img class="map" src="img/3.jpg" alt="Карлов мост">
       </div>
       <div class="btnrow">
         <button class="btn" data-check="3">Проверить</button>
-        <button class="btn ghost" data-next>Дальше</button>
       </div>
     </section>
 
-    <!-- 4. Стена Леннона -->
+    <!-- 4) Стена Леннона — img/4.jpg -->
     <section class="step" data-step="4">
       <h2>4) Стена Джона Леннона</h2>
       <div class="grid2">
         <div class="riddle">
           <p><b>Загадка:</b> «Здесь пишут мечты, рисуют мир и поют про любовь. Где ты?»</p>
           <label for="a4">Ответ:</label>
-          <input id="a4" placeholder="введи ответ…" />
+          <input id="a4" placeholder="введи ответ…">
           <div class="hint" id="m4"></div>
         </div>
-        <img class="map" src="img/lennon.jpg" alt="Lennon Wall">
+        <img class="map" src="img/4.jpg" alt="Стена Леннона">
       </div>
       <div class="btnrow">
         <button class="btn" data-check="4">Проверить</button>
-        <button class="btn ghost" data-next>Дальше</button>
       </div>
     </section>
 
-    <!-- 5. Бар Gambrinus -->
+    <!-- 5) U svatého Filipa a Jakuba — img/5.jpg (строгое название с диакритикой) -->
     <section class="step" data-step="5">
-      <h2>5) U svatého Filipa a Jakuba (Smíchov)</h2>
-      <p>Подвальный бар и разливной <b>Gambrinus</b>. Можешь взять мини-челлендж: «пражский тост» с соседним столом.</p>
-      <img class="map" src="img/filip.jpg" alt="Gambrinus bar">
+      <h2>5) Пора за «лучшим разливным»</h2>
+      <p><span class="tag">От брата</span> «Тут наливают лучшее разливное пиво в округе».  
+         Как официально называется этот храм хмеля? Напиши <b>точное</b> название с правильными буквами.</p>
+      <img class="map" src="img/5.jpg" alt="U svatého Filipa a Jakuba">
+      <div class="riddle">
+        <label for="a5">Название бара:</label>
+        <input id="a5" placeholder="введи точное название…">
+        <div class="hint" id="m5"></div>
+      </div>
       <div class="btnrow">
-        <button class="btn" data-next>Продолжить</button>
+        <button class="btn" data-check="5">Проверить</button>
       </div>
     </section>
 
-    <!-- 6. Мост Легий -->
+    <!-- 6) Мост Легий — img/6.jpg (просто фото) -->
     <section class="step" data-step="6">
       <h2>6) Most Legií (Мост Легий)</h2>
-      <p>Фото с видом на Влтаву и Карлов мост. Поймайте кадр «как туристы-идиоты» 😊</p>
-      <img class="map" src="img/legi.jpg" alt="Most Legií">
+      <p>Сделайте «геройский» кадр с видом на Влтаву и Карлов мост.  
+         Бонус: поза «турист-идиот» приветствуется 😁</p>
+      <img class="map" src="img/6.jpg" alt="Most Legií">
       <div class="btnrow">
         <button class="btn" data-next>Дальше</button>
       </div>
     </section>
 
-    <!-- 7. Национальный театр -->
+    <!-- 7) Národní divadlo — img/7.jpg -->
     <section class="step" data-step="7">
       <h2>7) Národní divadlo (Национальный театр)</h2>
       <div class="grid2">
         <div class="riddle">
           <p><b>Загадка:</b> «Я золотой, стою у реки и слышу аплодисменты.»</p>
           <label for="a7">Ответ:</label>
-          <input id="a7" placeholder="введи ответ…" />
+          <input id="a7" placeholder="введи ответ…">
           <div class="hint" id="m7"></div>
         </div>
-        <img class="map" src="img/theatre.jpg" alt="Национальный театр">
+        <img class="map" src="img/7.jpg" alt="Национальный театр">
       </div>
       <div class="btnrow">
         <button class="btn" data-check="7">Проверить</button>
-        <button class="btn ghost" data-next>Дальше</button>
       </div>
     </section>
 
-    <!-- 8. U Fleků -->
+    <!-- 8) U Fleků — img/8.jpg (строгое название с диакритикой) -->
     <section class="step" data-step="8">
-      <h2>8) U Fleků</h2>
-      <p>Легендарное тёмное пиво. Перерыв и заряд перед финишем.</p>
-      <img class="map" src="img/ufleku.jpg" alt="U Fleků">
+      <h2>8) Легендарное чёрное пиво</h2>
+      <p>Финишная прямая. Говорят, лучшая тьма — тут. Назови место <b>точно</b> и получи право на последний тост.</p>
+      <img class="map" src="img/8.jpg" alt="U Fleků">
+      <div class="riddle">
+        <label for="a8">Название места:</label>
+        <input id="a8" placeholder="введи точное название…">
+        <div class="hint" id="m8"></div>
+      </div>
       <div class="btnrow">
-        <button class="btn" data-next>К финишу</button>
+        <button class="btn" data-check="8">Проверить</button>
       </div>
     </section>
 
-    <!-- 9. Финал -->
+    <!-- 9) Финиш -->
     <section class="step" data-step="9">
-      <h2>9) Финал — ужин с рулькой</h2>
-      <p><b>Kozlovna U Paukerta</b> или из вашего списка. Здесь открывается конверт с призом:
-        <b>обратный билет в Париж к невесте</b>. 🤍</p>
-      <img class="map" src="img/paukerta.jpg" alt="Kozlovna U Paukerta">
-      <p class="footnote">P.S. Не забудь выдать жениху лист с челленджами и подвести итог по баллам.</p>
+      <h2>Финиш — Приз и рулька</h2>
+      <p>Любовь победила. Пиво — почти. Теперь — ужин и громкий тост. 🤍</p>
       <div class="btnrow">
-        <a class="btn ghost" href="#top" onclick="goTo(0);return false;">Вернуться к началу</a>
+        <button class="btn ghost" onclick="goTo(0)">Вернуться к началу</button>
       </div>
     </section>
-
-    <details style="margin-top:18px">
-      <summary><b>Показать список допустимых ответов (на случай спорных вариантов)</b></summary>
-      <div class="footnote">
-        <ul>
-          <li><b>Пороховая башня:</b> пороховая башня, пороховая, powder tower, prašná brána, prachna brana.</li>
-          <li><b>Куранты:</b> куранты, орлой, orloj, астрономические часы, astronomical clock.</li>
-          <li><b>Карлов мост:</b> карлов мост, charles bridge, карл мост, karlův most.</li>
-          <li><b>Стена Леннона:</b> стена леннона, lennon wall, john lennon wall, леннон.</li>
-          <li><b>Нац. театр:</b> национальный театр, narodni divadlo, national theatre.</li>
-        </ul>
-      </div>
-    </details>
 
   </div>
 </div>
 
 <script>
-  // навигация шагов
-  const steps = [...document.querySelectorAll('.step')];
-  const bar = document.getElementById('bar');
-  const label = document.getElementById('stepLabel');
-  let idx = 0;
+  // Навигация и прогресс
+  const steps=[...document.querySelectorAll('.step')];
+  const bar=document.getElementById('bar');
+  const label=document.getElementById('stepLabel');
+  let idx=0;
 
   function updateUI(){
     steps.forEach((s,i)=>s.classList.toggle('active', i===idx));
-    const pct = Math.round((idx)/(steps.length-1)*100);
-    bar.style.width = pct + '%';
+    const pct=Math.round(idx/(steps.length-1)*100);
+    bar.style.width=pct+'%';
     label.textContent = (idx===0? 'Старт' : `Шаг ${idx} из ${steps.length-1}`);
     window.scrollTo({top:0,behavior:'smooth'});
   }
-  function goTo(n){ idx = Math.max(0, Math.min(steps.length-1, n)); updateUI(); }
+  function goTo(n){ idx=Math.max(0,Math.min(steps.length-1,n)); updateUI(); }
+  document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>{ idx++; updateUI(); }));
 
-  document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click', ()=>{ idx++; updateUI(); }));
+  // Нормализация (для мягких проверок)
+  const norm = s => (s||"")
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // убираем диакритику
+    .replace(/[ё]/g,'е')
+    .replace(/[^a-zа-я0-9\s]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
 
-  // мягкая проверка ответов (без жёстких совпадений)
-  const ACCEPT = {
+  // Допустимые ответы (мягко) для достопримечательностей
+  const ACCEPT_SOFT = {
     1: ["пороховая башня","пороховая","powder tower","prašná brána","prasna brana","prachna brana"],
     2: ["куранты","орлой","orloj","астрономические часы","astronomical clock"],
     3: ["карлов мост","charles bridge","karluv most","karlův most","карл мост"],
@@ -265,23 +270,57 @@
     7: ["национальный театр","narodni divadlo","national theatre"]
   };
 
-  function norm(s){
-    return s.toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // убрать диакритику
-      .replace(/[ё]/g,'е')
-      .replace(/[^a-zа-я0-9\s]/g,' ')
-      .replace(/\s+/g,' ')
-      .trim();
+  // Строгие ответы с диакритикой (с подсказкой "почти")
+  const STRICT = {
+    5: "u svatého filipa a jakuba",
+    8: "u fleků"
+  };
+  const STRICT_RAW = {
+    5: "U svatého Filipa a Jakuba",
+    8: "U Fleků"
+  };
+
+  function checkSoft(id, val){
+    const n = norm(val);
+    return (ACCEPT_SOFT[id]||[]).some(v=> n.includes(norm(v)));
+  }
+  function checkStrict(id, val){
+    const raw = (val||"").trim().toLowerCase();
+    const target = STRICT[id];
+    if(!target) return true;
+    // точное сравнение по регистру и диакритике? — делаем так:
+    const exact = (val||"").trim() === STRICT_RAW[id];
+    if(exact) return {ok:true, msg:"Верно!"};
+    // если совпало без диакритики — подсказка «почти»
+    const noDia = norm(val);
+    const noDiaTarget = norm(STRICT_RAW[id]);
+    if(noDia === noDiaTarget) return {ok:false, almost:true, msg:"Почти! Проверь правильные буквы (диакритику)."};
+    return {ok:false, msg:"Не похоже. Введи официальное название места."};
   }
 
+  // Привязка кнопок "Проверить"
   document.querySelectorAll('[data-check]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const id = btn.getAttribute('data-check');
+    btn.addEventListener('click',()=>{
+      const id = +btn.getAttribute('data-check');
       const inp = document.getElementById('a'+id);
       const msg = document.getElementById('m'+id);
-      const ok = ACCEPT[id].some(v=> norm(inp.value).includes(norm(v)));
-      msg.textContent = ok ? 'Верно! Можно двигаться дальше.' : 'Похоже, не то. Попробуй иначе сформулировать.';
-      msg.className = 'hint ' + (ok? 'ok':'bad');
+      let ok=false, text="", cls="bad";
+
+      if(id===5 || id===8){
+        const res = checkStrict(id, inp.value);
+        ok = !!res.ok;
+        text = res.msg || (ok? "Верно!" : "Неа.");
+        if(res.almost) text = res.msg;
+      }else{
+        ok = checkSoft(id, inp.value);
+        text = ok ? "Верно! Поехали дальше." : "Почти. Скажи это по-другому 😉";
+      }
+
+      cls = ok ? "ok" : "bad";
+      msg.textContent = text;
+      msg.className = "hint " + cls;
+
+      if(ok){ setTimeout(()=>{ idx++; updateUI(); }, 550); }
     });
   });
 
