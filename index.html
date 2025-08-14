@@ -14,7 +14,7 @@
     font-family: "Trebuchet MS", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     color:var(--ink);
     background:var(--bg);
-    background-image: radial-gradient(40% 40% at 50% 10%, rgba(255,255,255,.6), rgba(0,0,0,0) 70%), 
+    background-image: radial-gradient(40% 40% at 50% 10%, rgba(255,255,255,.6), rgba(0,0,0,0) 70%),
                       radial-gradient(80% 80% at 50% 100%, rgba(0,0,0,.06), rgba(0,0,0,0) 70%);
   }
   .wrap{max-width:900px;margin:0 auto;padding:24px}
@@ -37,9 +37,13 @@
   h1{font-size:34px;text-align:center;color:#2c1d0f}
   h2{font-size:24px;color:#3b2916}
   p{font-size:18px;line-height:1.6;margin:10px 0}
-  .step{display:none; animation:.35s ease fade}
-  .step.active{display:block}
+
+  /* FIX: шаги скрыты по умолчанию, анимация только у активных.
+     Плюс жёстко ограничиваем область – показывать только .step внутри .card */
+  .card > .step{display:none!important;}
+  .card > .step.active{display:block!important; animation:.35s ease fade;}
   @keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
   .grid2{display:grid;grid-template-columns:1fr;gap:14px}
   @media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
   .map{width:100%;max-height:420px;object-fit:cover;border-radius:12px;border:1px solid #d7c6a3}
@@ -78,10 +82,10 @@
 <div class="wrap">
   <div class="card">
 
-    <!-- ВСТУПЛЕНИЕ / СТАРТ (U Kunštátů, без ввода) -->
+    <!-- ВСТУПЛЕНИЕ / СТАРТ -->
     <section class="step active" data-step="0">
       <h1>В поисках последней пинты</h1>
-      <p><b>Готовься к веселью.</b> Говорят, где-то в Праге спрятан приз — <b>обратный билет в Париж к невесте</b>. 
+      <p><b>Готовься к веселью.</b> Говорят, где-то в Праге спрятан приз — <b>обратный билет в Париж к невесте</b>.
          Дорога к нему проходит через пену, легенды и пару сомнительных решений. Карта уже у тебя — осталось
          доказать, что ты достоин финального тоста. 🍺</p>
       <div class="grid2">
@@ -105,7 +109,6 @@
         <label for="a1">Ответ:</label>
         <input id="a1" placeholder="введи ответ…">
         <div class="hint" id="m1"></div>
-      </div>
       </div>
       <div class="btnrow">
         <button class="btn" data-check="1">Проверить</button>
@@ -157,10 +160,10 @@
       </div>
     </section>
 
-    <!-- 5) U svatého Filipa a Jakuba — img/5.jpg (строгое название с диакритикой) -->
+    <!-- 5) U svatého Filipa a Jakuba — img/5.jpg -->
     <section class="step" data-step="5">
       <h2>5) Пора за «лучшим разливным»</h2>
-      <p><span class="tag">От Игоря</span> «Тут наливают лучшее разливное пиво».  
+      <p><span class="tag">От Игоря</span> «Тут наливают лучшее разливное пиво».
          Как официально называется этот храм хмеля? Напиши <b>точное</b> название с правильными буквами.</p>
       <img class="map" src="img/5.jpg" alt="U svatého Filipa a Jakuba">
       <div class="riddle">
@@ -173,10 +176,10 @@
       </div>
     </section>
 
-    <!-- 6) Мост Легий — img/6.jpg (просто фото) -->
+    <!-- 6) Мост Легий — img/6.jpg -->
     <section class="step" data-step="6">
       <h2>6) Most Legií </h2>
-      <p>Сделайте «геройский» кадр с видом на Влтаву и Карлов мост.  
+      <p>Сделайте «геройский» кадр с видом на Влтаву и Карлов мост.
          Бонус: поза «турист-идиот» приветствуется 😁</p>
       <img class="map" src="img/6.jpg" alt="Most Legií">
       <div class="btnrow">
@@ -199,7 +202,7 @@
       </div>
     </section>
 
-    <!-- 8) U Fleků — img/8.jpg (строгое название с диакритикой) -->
+    <!-- 8) U Fleků — img/8.jpg -->
     <section class="step" data-step="8">
       <h2>8) Легендарное чёрное пиво</h2>
       <p>Финишная прямая. Говорят, лучшая тьма — тут. Назови место <b>точно</b> и получи право на последний тост.</p>
@@ -228,7 +231,7 @@
 
 <script>
   // Навигация и прогресс
-  const steps=[...document.querySelectorAll('.step')];
+  const steps=[...document.querySelectorAll('.card > .step')];
   const bar=document.getElementById('bar');
   const label=document.getElementById('stepLabel');
   let idx=0;
@@ -246,13 +249,12 @@
   // Нормализация (для мягких проверок)
   const norm = s => (s||"")
     .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // убираем диакритику
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .replace(/[ё]/g,'е')
     .replace(/[^a-zа-я0-9\s]/g,' ')
     .replace(/\s+/g,' ')
     .trim();
 
-  // Допустимые ответы (мягко) для достопримечательностей
   const ACCEPT_SOFT = {
     1: ["пороховая башня","пороховая","powder tower","prašná brána","prasna brana","prachna brana"],
     2: ["куранты","орлой","orloj","астрономические часы","astronomical clock"],
@@ -261,61 +263,35 @@
     7: ["национальный театр","narodni divadlo","national theatre"]
   };
 
-  // Строгие ответы с диакритикой (с подсказкой "почти")
-  const STRICT = {
-    5: "u svatého filipa a jakuba",
-    8: "u fleků"
-  };
-  const STRICT_RAW = {
-    5: "U svatého Filipa a Jakuba",
-    8: "U Fleků"
-  };
+  const STRICT_RAW = { 5: "U svatého Filipa a Jakuba", 8: "U Fleků" };
 
   function checkSoft(id, val){
     const n = norm(val);
     return (ACCEPT_SOFT[id]||[]).some(v=> n.includes(norm(v)));
   }
   function checkStrict(id, val){
-    const raw = (val||"").trim().toLowerCase();
-    const target = STRICT[id];
-    if(!target) return true;
-    // точное сравнение по регистру и диакритике? — делаем так:
-    const exact = (val||"").trim() === STRICT_RAW[id];
-    if(exact) return {ok:true, msg:"Верно!"};
-    // если совпало без диакритики — подсказка «почти»
-    const noDia = norm(val);
-    const noDiaTarget = norm(STRICT_RAW[id]);
-    if(noDia === noDiaTarget) return {ok:false, almost:true, msg:"Почти! Проверь правильные буквы (диакритику)."};
-    return {ok:false, msg:"Не похоже. Введи официальное название места."};
+    const rawTrim = (val||"").trim();
+    if(!STRICT_RAW[id]) return {ok:true,msg:"Верно!"};
+    if(rawTrim === STRICT_RAW[id]) return {ok:true,msg:"Верно!"};
+    if(norm(rawTrim) === norm(STRICT_RAW[id])) return {ok:false,almost:true,msg:"Почти! Проверь правильные буквы (диакритику)."};
+    return {ok:false,msg:"Не похоже. Введи официальное название места."};
   }
 
-  // Привязка кнопок "Проверить"
   document.querySelectorAll('[data-check]').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const id = +btn.getAttribute('data-check');
       const inp = document.getElementById('a'+id);
       const msg = document.getElementById('m'+id);
-      let ok=false, text="", cls="bad";
-
-      if(id===5 || id===8){
-        const res = checkStrict(id, inp.value);
-        ok = !!res.ok;
-        text = res.msg || (ok? "Верно!" : "Неа.");
-        if(res.almost) text = res.msg;
-      }else{
-        ok = checkSoft(id, inp.value);
-        text = ok ? "Верно! Поехали дальше." : "Почти. Скажи это по-другому 😉";
-      }
-
-      cls = ok ? "ok" : "bad";
-      msg.textContent = text;
-      msg.className = "hint " + cls;
-
-      if(ok){ setTimeout(()=>{ idx++; updateUI(); }, 550); }
+      let res = (id===5 || id===8) ? checkStrict(id, inp.value)
+                                   : {ok: checkSoft(id, inp.value)};
+      msg.textContent = res.ok ? (res.msg || "Верно! Поехали дальше.") 
+                               : (res.msg || "Почти. Скажи это по-другому 😉");
+      msg.className = "hint " + (res.ok ? "ok" : "bad");
+      if(res.ok){ setTimeout(()=>{ idx++; updateUI(); }, 550); }
     });
   });
 
   updateUI();
 </script>
 </body>
-</html>  
+</html>
